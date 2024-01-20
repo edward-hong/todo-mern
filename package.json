@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
+    "start": "NODE_ENV=production node server/index.js",
     "server": "NODE_ENV=development nodemon server/index.js",
     "client": "npm run dev --prefix client",
     "dev": "concurrently -n server,client \"npm run server\" \"npm run client\""

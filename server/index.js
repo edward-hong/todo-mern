@@ -25,7 +25,7 @@ app.use('/auth', authRoutes)
 app.use('/todo', todoRoutes)
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'))
+  app.use(express.static('client/dist'))
   const path = require('path')
   app.get('*', (_req, res) => {
     res.sendFile(path.resolve(__dirname, '..', 'client', 'dist', 'index.html'))
