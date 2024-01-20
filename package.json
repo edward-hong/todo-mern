@@ -6,13 +6,13 @@
   "scripts": {
     "start": "node server/index.js",
     "server": "nodemon server/index.js",
-    "client": "npm start --prefix client",
+    "client": "npm run dev --prefix client",
     "dev": "concurrently -n server,client \"npm run server\" \"npm run client\""
   },
   "bugs": {
-    "url": "https://github.com/edward-hong/mern-todo/issues"
+    "url": "https://github.com/edward-hong/todo-mern/issues"
   },
-  "homepage": "https://github.com/edward-hong/mern-todo#readme",
+  "homepage": "https://github.com/edward-hong/todo-mern#readme",
   "keywords": [
     "MongoDB",
     "Express",
