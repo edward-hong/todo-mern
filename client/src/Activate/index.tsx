@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
@@ -8,15 +9,7 @@ import axios from 'axios'
 import Toast from '../Toast'
 import useToast from '../hooks/useToast'
 
-interface ActivateProps {
-  match: {
-    params: {
-      token: string
-    }
-  }
-}
-
-const Activate = ({ match }: ActivateProps) => {
+const Activate = () => {
   const [name, setName] = useState('')
   const [token, setToken] = useState('')
   const [
@@ -29,10 +22,12 @@ const Activate = ({ match }: ActivateProps) => {
     handleClose,
   ] = useToast()
 
+  const params = useParams()
+
   useEffect(() => {
-    setToken(match.params.token)
-    setName(decodeJwt(match.params.token).name as string)
-  }, [match.params.token])
+    setToken(params.token as string)
+    setName(decodeJwt(params.token as string).name as string)
+  }, [params.token])
 
   const handleSubmit = () => {
     axios({
