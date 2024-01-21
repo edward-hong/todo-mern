@@ -1,8 +1,16 @@
-import PropTypes from 'prop-types'
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
 
-const Toast = ({ open, handleClose, severity, toastMsg }) => (
+import { ToastSeverity } from '../types/ToastSeverity'
+
+interface ToastProps {
+  open: boolean
+  handleClose: () => void
+  severity: ToastSeverity
+  toastMsg: string
+}
+
+const Toast = ({ open, handleClose, severity, toastMsg }: ToastProps) => (
   <Snackbar
     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     open={open}
@@ -18,12 +26,5 @@ const Toast = ({ open, handleClose, severity, toastMsg }) => (
     </Alert>
   </Snackbar>
 )
-
-Toast.propTypes = {
-  open: PropTypes.bool.isRequired,
-  handleClose: PropTypes.func.isRequired,
-  severity: PropTypes.string.isRequired,
-  toastMsg: PropTypes.string.isRequired,
-}
 
 export default Toast

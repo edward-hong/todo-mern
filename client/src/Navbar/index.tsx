@@ -6,9 +6,8 @@ import Button from '@mui/material/Button'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 import { isAuth, signout } from '../utils/helpers'
-import useClasses from '../hooks/useClasses'
 
-const styles = () => ({
+const styles = {
   root: {
     flexGrow: 1,
   },
@@ -19,10 +18,9 @@ const styles = () => ({
     color: 'white',
     textDecoration: 'none',
   },
-})
+}
 
 const Navbar = () => {
-  const classes = useClasses(styles)
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const [isLoggedIn, setIsLoggedIn] = useState(isAuth())
@@ -41,11 +39,11 @@ const Navbar = () => {
   }
 
   return (
-    <div className={classes.root}>
+    <div style={styles.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            <Link className={classes.navLink} to="/">
+          <Typography variant="h6" sx={styles.title}>
+            <Link style={styles.navLink} to="/">
               Todo
             </Link>
           </Typography>
@@ -57,12 +55,12 @@ const Navbar = () => {
           ) : (
             <>
               <Button color="inherit">
-                <Link className={classes.navLink} to="/signup">
+                <Link style={styles.navLink} to="/signup">
                   Signup
                 </Link>
               </Button>
               <Button color="inherit">
-                <Link className={classes.navLink} to="/signin">
+                <Link style={styles.navLink} to="/signin">
                   Signin
                 </Link>
               </Button>

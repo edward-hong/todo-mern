@@ -1,9 +1,11 @@
 import { useState } from 'react'
 
+import { ToastSeverity } from '../types/ToastSeverity'
+
 const useToast = () => {
-  const [open, setOpen] = useState(false)
-  const [severity, setSeverity] = useState('success')
-  const [toastMsg, setToastMsg] = useState('')
+  const [open, setOpen] = useState<boolean>(false)
+  const [severity, setSeverity] = useState<ToastSeverity>('success')
+  const [toastMsg, setToastMsg] = useState<string>('')
 
   const handleClose = () => {
     setOpen(false)
@@ -17,7 +19,7 @@ const useToast = () => {
     toastMsg,
     setToastMsg,
     handleClose,
-  ]
+  ] as const
 }
 
 export default useToast

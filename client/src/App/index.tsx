@@ -14,7 +14,7 @@ const App = () => (
   <BrowserRouter>
     <Navbar />
     <Routes>
-      <Route exact path="/" element={<PrivateRoute page={Home} />} />
+      <Route path="/" element={<PrivateRoute page={Home} />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
       <Route path="/forgot" element={<PublicRoute page={Forgot} />} />

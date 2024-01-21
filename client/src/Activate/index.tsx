@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
@@ -9,7 +8,15 @@ import axios from 'axios'
 import Toast from '../Toast'
 import useToast from '../hooks/useToast'
 
-const Activate = ({ match }) => {
+interface ActivateProps {
+  match: {
+    params: {
+      token: string
+    }
+  }
+}
+
+const Activate = ({ match }: ActivateProps) => {
   const [name, setName] = useState('')
   const [token, setToken] = useState('')
   const [
@@ -24,7 +31,7 @@ const Activate = ({ match }) => {
 
   useEffect(() => {
     setToken(match.params.token)
-    setName(decodeJwt(match.params.token).name)
+    setName(decodeJwt(match.params.token).name as string)
   }, [match.params.token])
 
   const handleSubmit = () => {
@@ -69,10 +76,6 @@ const Activate = ({ match }) => {
       />
     </Container>
   )
-}
-
-Activate.propTypes = {
-  match: PropTypes.object,
 }
 
 export default Activate

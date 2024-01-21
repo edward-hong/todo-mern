@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Navigate, Link, useNavigate } from 'react-router-dom'
+import { useState, FormEvent } from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
@@ -9,12 +8,9 @@ import axios from 'axios'
 
 import Toast from '../Toast'
 import useToast from '../hooks/useToast'
-import { authenticate, isAuth } from '../utils/helpers.js'
 
-const Signin = () => {
+const Forgot = () => {
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const navigate = useNavigate()
   const [
     open,
     setOpen,
@@ -25,17 +21,18 @@ const Signin = () => {
     handleClose,
   ] = useToast()
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
     axios({
-      method: 'POST',
-      url: '/auth/signin',
-      data: { email, password },
+      method: 'PUT',
+      url: '/auth/forgot-password',
+      data: { email },
     })
       .then(response => {
-        authenticate(response)
-        navigate('/')
+        setEmail('')
+        setSeverity('success')
+        setToastMsg(response.data.message)
+        setOpen(true)
       })
       .catch(error => {
         setSeverity('error')
@@ -47,36 +44,24 @@ const Signin = () => {
   return (
     <Container maxWidth="sm">
       <Typography
-        data-testid="heaRedirectding"
+        data-testid="heading"
         align="center"
         variant="h2"
         component="h1">
-        Signin
+        Forgot Password
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              inputProps={{ 'data-testid': 'email' }}
               label="Email"
+              inputProps={{ 'data-testid': 'email' }}
               variant="outlined"
               size="small"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              inputProps={{ 'data-testid': 'password' }}
-              label="Password"
-              variant="outlined"
-              size="small"
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -86,13 +71,8 @@ const Signin = () => {
               fullWidth
               variant="contained"
               color="primary">
-              Signin
+              Reset Password
             </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography data-testid="forgot" align="right" component="p">
-              Forgot Password? Click <Link to="/forgot">here</Link>
-            </Typography>
           </Grid>
         </Grid>
       </form>
@@ -102,9 +82,8 @@ const Signin = () => {
         severity={severity}
         toastMsg={toastMsg}
       />
-      {isAuth() && <Navigate to="/" />}
     </Container>
   )
 }
 
-export default Signin
+export default Forgot

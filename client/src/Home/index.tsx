@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, KeyboardEventHandler } from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
@@ -18,17 +18,32 @@ import axios from 'axios'
 import Toast from '../Toast'
 import useToast from '../hooks/useToast'
 
-const Home = () => {
-  const userId = JSON.parse(localStorage.getItem('user'))._id
+interface Todo {
+  _id: string
+  todo: string
+  completed: boolean
+  isEdit: boolean
+  userId: string
+}
 
-  const [newTodo, setNewTodo] = useState({
+interface NewTodo {
+  todo: string
+  isEdit: boolean
+  completed?: boolean
+  userId?: string
+}
+
+const Home = () => {
+  const userId = JSON.parse(localStorage.getItem('user') as string)._id
+
+  const [newTodo, setNewTodo] = useState<NewTodo>({
     todo: '',
     isEdit: false,
     completed: false,
     userId,
   })
-  const [todos, setTodos] = useState([])
-  const [completedTodos, setCompletedTodos] = useState([])
+  const [todos, setTodos] = useState<Todo[]>([])
+  const [completedTodos, setCompletedTodos] = useState<Todo[]>([])
   const [tempEditTodo, setTempEditTodo] = useState('')
   const [
     open,
@@ -46,21 +61,21 @@ const Home = () => {
       .then(({ data }) => {
         setTodos(
           data.todos
-            .map(todo => {
+            .map((todo: Todo) => {
               todo.isEdit = false
               return todo
             })
-            .filter(todo => {
+            .filter((todo: Todo) => {
               return !todo.completed
             })
         )
         setCompletedTodos(
           data.todos
-            .map(todo => {
+            .map((todo: Todo) => {
               todo.isEdit = false
               return todo
             })
-            .filter(todo => {
+            .filter((todo: Todo) => {
               return todo.completed
             })
         )
@@ -98,7 +113,7 @@ const Home = () => {
     }
   }
 
-  const handleComplete = (i, id) => () => {
+  const handleComplete = (i: number, id: string) => () => {
     axios({
       method: 'PUT',
       url: '/todo/complete',
@@ -119,13 +134,13 @@ const Home = () => {
       })
   }
 
-  const handleKeyDown = e => {
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = e => {
     if (e.key === 'Enter') {
       addTodo()
     }
   }
 
-  const handleEditMode = i => () => {
+  const handleEditMode = (i: number) => () => {
     todos[i].isEdit ? setTempEditTodo('') : setTempEditTodo(todos[i].todo)
     setTodos([
       ...todos.slice(0, i),
@@ -134,7 +149,7 @@ const Home = () => {
     ])
   }
 
-  const handleEdit = (i, id) => () => {
+  const handleEdit = (i: number, id: string | undefined) => () => {
     axios({
       method: 'PUT',
       url: '/todo/edit',
@@ -158,7 +173,7 @@ const Home = () => {
       })
   }
 
-  const handleDelete = (i, id) => () => {
+  const handleDelete = (i: number, id: string) => () => {
     axios({
       method: 'DELETE',
       url: `/todo/remove/${id}`,
@@ -239,7 +254,7 @@ const Home = () => {
                       <Button onClick={handleEdit(i, _id)} color="warning">
                         <CreateIcon />
                       </Button>
-                      <Button onClick={handleEditMode(i, _id)} color="error">
+                      <Button onClick={handleEditMode(i)} color="error">
                         <ClearIcon />
                       </Button>
                     </ButtonGroup>

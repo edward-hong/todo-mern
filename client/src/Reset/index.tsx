@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useState, useEffect, FormEvent } from 'react'
+import { useParams } from 'react-router-dom'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import TextField from '@mui/material/TextField'
@@ -9,12 +9,10 @@ import axios from 'axios'
 
 import Toast from '../Toast'
 import useToast from '../hooks/useToast'
-import { isAuth } from '../utils/helpers'
 
-const Signup = () => {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+const Reset = () => {
+  const [token, setToken] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [
     open,
     setOpen,
@@ -25,18 +23,22 @@ const Signup = () => {
     handleClose,
   ] = useToast()
 
-  const handleSubmit = e => {
+  const urlToken = useParams().token
+
+  useEffect(() => {
+    setToken(urlToken as string)
+  }, [urlToken])
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     axios({
-      method: 'POST',
-      url: '/auth/signup',
-      data: { name, email, password },
+      method: 'PUT',
+      url: '/auth/reset-password',
+      data: { newPassword, resetPasswordLink: token },
     })
       .then(response => {
-        setName('')
-        setEmail('')
-        setPassword('')
+        setNewPassword('')
         setSeverity('success')
         setToastMsg(response.data.message)
         setOpen(true)
@@ -55,44 +57,20 @@ const Signup = () => {
         align="center"
         variant="h2"
         component="h1">
-        Signup
+        Reset Password
       </Typography>
       <form onSubmit={handleSubmit}>
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <TextField
               fullWidth
-              inputProps={{ 'data-testid': 'name' }}
-              label="Name"
-              variant="outlined"
-              size="small"
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              inputProps={{ 'data-testid': 'email' }}
-              label="Email"
-              variant="outlined"
-              size="small"
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
               inputProps={{ 'data-testid': 'password' }}
-              label="Password"
+              label="New Password"
               variant="outlined"
               size="small"
               type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -102,7 +80,7 @@ const Signup = () => {
               fullWidth
               variant="contained"
               color="primary">
-              Signup
+              Set New Password
             </Button>
           </Grid>
         </Grid>
@@ -113,9 +91,8 @@ const Signup = () => {
         severity={severity}
         toastMsg={toastMsg}
       />
-      {isAuth() ? <Navigate to="/" /> : null}
     </Container>
   )
 }
 
-export default Signup
+export default Reset
